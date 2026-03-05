@@ -130,6 +130,7 @@ export default function IssuesTable({ report }: IssuesTableProps) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortBy)}
+                title="Sort issues by"
                 className="px-3 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="severity">Severity (High → Low)</option>
@@ -190,6 +191,7 @@ export default function IssuesTable({ report }: IssuesTableProps) {
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
                         style={{ backgroundColor: getScoreColor(issue.score) }}
+                        data-testid={`score-badge-${issue.issue_key}`}
                       >
                         {Math.round(issue.score)}
                       </div>
