@@ -30,5 +30,12 @@ jobs:
     - name: Install frontend dependencies
       run: make install-frontend
 
+    - name: Clear npm cache and reinstall frontend dependencies
+      run: |
+        cd frontend
+        npm cache clean --force
+        rm -rf node_modules package-lock.json
+        npm install
+
     - name: Build frontend
       run: cd frontend && npm run build
