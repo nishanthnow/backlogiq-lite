@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { IssueAnalysis, AnalysisReport } from '../types'
+import { AnalysisReport } from '../types'
 import IssueDetail from './IssueDetail'
 import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
 
@@ -216,9 +216,6 @@ export default function IssuesTable({ report }: IssuesTableProps) {
                     <IssueDetail
                       issue={issue}
                       isExpanded={expandedKey === issue.issue_key}
-                      onToggle={() =>
-                        setExpandedKey(expandedKey === issue.issue_key ? null : issue.issue_key)
-                      }
                     />
                   </td>
                 </tr>

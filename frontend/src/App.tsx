@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Header from './components/Header'
 import ConnectionForm from './components/ConnectionForm'
 import ProgressBar from './components/ProgressBar'

@@ -161,6 +161,8 @@ export default function ConnectionForm({ onSubmit, isLoading }: ConnectionFormPr
             max="1000"
             value={maxIssues}
             onChange={(e) => setMaxIssues(parseInt(e.target.value) || 200)}
+            placeholder="200"
+            title="Maximum number of issues to analyze"
             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading}
           />

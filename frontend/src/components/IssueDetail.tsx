@@ -1,15 +1,12 @@
-import React from 'react'
 import { IssueAnalysis } from '../types'
 import FindingCard from './FindingCard'
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
 
 interface IssueDetailProps {
   issue: IssueAnalysis
   isExpanded: boolean
-  onToggle: () => void
 }
 
-export default function IssueDetail({ issue, isExpanded, onToggle }: IssueDetailProps) {
+export default function IssueDetail({ issue, isExpanded }: IssueDetailProps) {
   if (!isExpanded) return null
 
   return (

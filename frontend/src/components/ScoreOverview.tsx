@@ -1,4 +1,3 @@
-import React from 'react'
 import { AnalysisReport } from '../types'
 
 interface ScoreOverviewProps {
