@@ -25,6 +25,7 @@ export interface AnalysisReport {
   severity_breakdown: Record<string, number>;
   issues: IssueAnalysis[];
   analyzed_at: string;
+  ai_enabled: boolean;
 }
 
 export interface AnalyzeRequest {

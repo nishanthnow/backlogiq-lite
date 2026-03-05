@@ -1,4 +1,5 @@
 import { AnalysisReport } from '../types'
+import { Sparkles } from 'lucide-react'
 
 interface ScoreOverviewProps {
   report: AnalysisReport
@@ -25,7 +26,15 @@ export default function ScoreOverview({ report }: ScoreOverviewProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 border border-slate-200">
-      <h2 className="text-lg font-semibold text-slate-800 mb-6">Backlog Health Score</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-slate-800">Backlog Health Score</h2>
+        {!report.ai_enabled && (
+          <div className="flex items-center gap-1 text-xs text-slate-400">
+            <Sparkles size={14} />
+            <span>Fast rules only</span>
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Score Circle */}

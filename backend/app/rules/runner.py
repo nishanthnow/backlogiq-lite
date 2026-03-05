@@ -1,4 +1,3 @@
-import asyncio
 from ..schemas import JiraIssue, IssueAnalysis
 from .fast_rules import (
     check_description_exists,
@@ -9,35 +8,22 @@ from .fast_rules import (
     check_story_points_assigned,
     check_not_oversized,
 )
-from .ai_rules import (
-    ai_check_independence,
-    ai_check_value_clarity,
-    ai_check_testability,
-)
 
 
-async def run_all_rules(
-    issue: JiraIssue,
-    ai_enabled: bool = False,
-    ai_client=None,
-    ai_deployment: str = None,
-    ai_semaphore: asyncio.Semaphore = None
-) -> IssueAnalysis:
+async def run_all_rules(issue: JiraIssue) -> IssueAnalysis:
     """
-    Run all quality check rules on an issue.
+    Run all fast quality check rules on an issue.
+    
+    Runs 7 fast sanity checks with instant execution (no AI, no external API calls).
     
     Args:
         issue: The Jira issue to analyze
-        ai_enabled: Whether to run AI rules (default False for now)
-        ai_client: Azure OpenAI client (required if ai_enabled=True)
-        ai_deployment: Azure OpenAI deployment name
-        ai_semaphore: Semaphore to limit concurrent AI calls
     
     Returns:
-        IssueAnalysis with all findings and an overall score
+        IssueAnalysis with all findings and an overall score (0-100)
     """
     
-    # Run fast rules (synchronous)
+    # Run the 7 fast rules
     fast_rules = [
         check_description_exists,
         check_description_length,
@@ -49,24 +35,6 @@ async def run_all_rules(
     ]
     
     findings = [rule(issue) for rule in fast_rules]
-    
-    # Run AI rules if enabled
-    if ai_enabled and ai_client and ai_deployment:
-        ai_rule_funcs = [ai_check_independence, ai_check_value_clarity, ai_check_testability]
-        
-        async def run_ai_rule(rule_func):
-            if ai_semaphore:
-                async with ai_semaphore:
-                    return await rule_func(issue, ai_client, ai_deployment)
-            else:
-                return await rule_func(issue, ai_client, ai_deployment)
-        
-        try:
-            ai_findings = await asyncio.gather(*[run_ai_rule(f) for f in ai_rule_funcs])
-            findings.extend(ai_findings)
-        except Exception as e:
-            # If AI rules fail, continue with fast rules only
-            print(f"Warning: AI rules failed for {issue.key}: {e}")
     
     # Filter out N/A findings (not applicable to this issue type)
     applicable_findings = [f for f in findings if f.finding != "N/A for this issue type"]
@@ -81,10 +49,10 @@ async def run_all_rules(
     
     score = round(score, 1)
     
-    # Determine overall severity
-    if any(f.severity == "critical" for f in applicable_findings):
+    # Determine overall severity based on score
+    if score < 60:
         severity = "critical"
-    elif score < 70:
+    elif score < 75:
         severity = "moderate"
     else:
         severity = "info"
